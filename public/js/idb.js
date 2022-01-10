@@ -7,7 +7,7 @@ const request = indexedDB.open('budget-tracker', 1);
 // this event will emit if the database version changes (nonexistant to version 1, v1 to v2, etc.)
 request.onupgradeneeded = function(event) {
     const db = event.target.result;
-    db.createObjectStore('new_budget', { autoIncrement: true });
+    db.createObjectStore('new_transfer', { autoIncrement: true });
   };
 
   // upon a successful 
@@ -27,16 +27,16 @@ request.onsuccess = function(event) {
 
   //Function to save transaction if device does not have internet access
 function saveBudget(transaction) {
-  const budgetTransaction = db.transaction(["new_budget"], "readwrite");
-  const budgetObjectStore = budgetTransaction.objectStore("new_budget");
+  const budgetTransaction = db.transaction(["new_transfer"], "readwrite");
+  const budgetObjectStore = budgetTransaction.objectStore("new_transfer");
   budgetObjectStore.add(transaction);
 }
 
   //Function to upload transactions once application is back online
 function uploadBudget() {
   //Open database transaction
-  const budgetTransaction = db.transaction(["new_budget"], "readwrite");
-  const budgetObjectStore = budgetTransaction.objectStore("new_budget");
+  const budgetTransaction = db.transaction(["new_transfer"], "readwrite");
+  const budgetObjectStore = budgetTransaction.objectStore("new_transfer");
 
   //Get all transaction records
   const getAll = budgetObjectStore.getAll();
@@ -57,8 +57,8 @@ function uploadBudget() {
                   throw new Error(serverResponse);
               }
               //Clear all transactions from the store
-              const budgetTransaction = db.transaction(["new_budget"], "readwrite");
-              const budgetObjectStore = budgetTransaction.objectStore("new_budget");
+              const budgetTransaction = db.transaction(["new_transfer"], "readwrite");
+              const budgetObjectStore = budgetTransaction.objectStore("new_transfer");
               budgetObjectStore.clear();
 
               alert("All budget transactions have been submitted.");
