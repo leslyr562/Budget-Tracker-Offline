@@ -4,36 +4,36 @@ let db;
 const request = indexedDB.open('budget-tracker', 1);
 
 
-// this event will emit if the database version changes (nonexistant to version 1, v1 to v2, etc.)
+//Event to handle changes in database version
 request.onupgradeneeded = function(event) {
-    const db = event.target.result;
-    db.createObjectStore('new_transfer', { autoIncrement: true });
-  };
+  const db = event.target.result;
+  db.createObjectStore("new_transfer", { autoIncrement: true });
+};
 
-  // upon a successful 
 request.onsuccess = function(event) {
-    // when db is successfully created with its object store (from onupgradedneeded event above) or simply established a connection, save reference to db in global variable
-    db = event.target.result;
+  // when db is successfully created with its object store (from onupgradedneeded event above) or simply established a connection, save reference to db in global variable
+  db = event.target.result;
   
-    if (navigator.onLine) {
-       uploadBudget();
-    }
-  };
-  
-  request.onerror = function(event) {
-    // log error here
-    console.log(event.target.errorCode);
-  };
+  if(navigator.onLine) {
+      //Upload any transactions that were registered while user was offline
+      uploadTransactions();
+  }
+};
 
-  //Function to save transaction if device does not have internet access
-function saveBudget(transaction) {
+request.onerror = function(event) {
+  //Log the error to the console
+  console.log(event.target.errorCode);
+};
+
+//Function to save transaction if device does not have internet access
+function saveTransaction(transaction) {
   const budgetTransaction = db.transaction(["new_transfer"], "readwrite");
   const budgetObjectStore = budgetTransaction.objectStore("new_transfer");
   budgetObjectStore.add(transaction);
 }
 
-  //Function to upload transactions once application is back online
-function uploadBudget() {
+//Function to upload transactions once application is back online
+function uploadTransactions() {
   //Open database transaction
   const budgetTransaction = db.transaction(["new_transfer"], "readwrite");
   const budgetObjectStore = budgetTransaction.objectStore("new_transfer");
@@ -71,4 +71,4 @@ function uploadBudget() {
 }
 
 //Upload transactions when application is back online
-window.addEventListener('online', uploadBudget);
+window.addEventListener('online', uploadTransactions);
