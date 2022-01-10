@@ -37,8 +37,8 @@ function saveBudget(transaction) {
   //Function to upload transactions once application is back online
 function uploadBudget() {
   //Open database transaction
-  const budgetTransaction = db.transaction(["new_transfer"], "readwrite");
-  const budgetObjectStore = budgetTransaction.objectStore("new_transfer");
+  const budgetTransaction = db.transaction(["new_budget"], "readwrite");
+  const budgetObjectStore = budgetTransaction.objectStore("new_budget");
 
   //Get all transaction records
   const getAll = budgetObjectStore.getAll();
