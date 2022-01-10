@@ -71,4 +71,4 @@ function uploadBudget() {
 }
 
 //Upload transactions when application is back online
-window.addEventListener('online', uploadTransactions);
+window.addEventListener('online', uploadBudget);
