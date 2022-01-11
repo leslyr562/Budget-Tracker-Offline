@@ -6,6 +6,7 @@ const compression = require("compression");
 const PORT = process.env.PORT || 3001;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhostL:27017/budget-tracker";
 
+
 const app = express();
 
 app.use(logger("dev"));
